@@ -8,10 +8,12 @@ function PGamePanel({ status, setStatus }) {
             <div className={`panel-turn ${status.turn === 1 ? "white" : "black"}`}>{status.turn === 1 ? "♔ White" : "♚ Black"}'s Turn</div>
             {/* FOR TESTING ONLY */}
             <div>TESTING</div>
+            {/*
             <button onClick={setStatus(prevStatus => ({
                 ...prevStatus,
                 turn: -prevStatus.turn
             }))}>Change Turn</button>
+            */}
         </div>
     );
 }

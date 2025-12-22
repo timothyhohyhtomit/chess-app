@@ -1,15 +1,13 @@
 import React from 'react';
 
-import GameBoard from "./util/gameboard/GameBoard.js";
+import Game from "./util/game/Game.js";
 
 import './App.css';
 
 function App() {
     return (
         <div className="App">
-            <GameBoard
-                board="RNBQKBNRPPPPPPPPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxpppppppprnbqkbnr"
-                state=""
+            <Game
             />
         </div>
     );

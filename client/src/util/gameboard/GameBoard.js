@@ -4,7 +4,7 @@ import GamePiece from "../gamepieces/GamePiece.js";
 
 import "./GameBoard.css";
 
-function GameBoard({ board, state }) {
+function GameBoard({ board, status, setBoard, setStatus }) {
     // helper functions
     return (
         <div className="chessboard">
@@ -19,7 +19,7 @@ function GameBoard({ board, state }) {
                                 className={`square ${isDark ? "dark" : "light"}`}
                             >
                                 { piece !== 'x' && (
-                                    <GamePiece code={piece} />
+                                    <GamePiece code={piece} turn={status.turn} />
                                 )}
                             </div>
                         );

@@ -5,7 +5,7 @@
     grid-auto-flow: row;
     border: 2px solid #333;
     width: max-content;
-
+    user-select: none;
 }
 
 .chessboard .square {

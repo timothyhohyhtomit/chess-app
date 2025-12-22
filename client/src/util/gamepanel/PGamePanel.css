@@ -1,6 +1,6 @@
 .panel {
     display: inline-flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 40%;
     box-sizing: border-box;
 }

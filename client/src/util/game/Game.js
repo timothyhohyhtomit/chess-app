@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import GameBoard from "../gameboard/GameBoard.js";
+import PGame from "./PGame.js";
 
 function Game() {
     // states
@@ -26,7 +26,7 @@ function Game() {
         isCheckmate: false
     });
     return (
-        <GameBoard
+        <PGame
             board={board}
             status={status}
             setBoard={setBoard}

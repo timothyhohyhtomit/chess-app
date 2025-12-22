@@ -1,11 +1,10 @@
 import React from "react";
 
-import GamePiece from "../gamepieces/GamePiece.js";
+import PGamePiece from "../gamepieces/PGamePiece.js";
 
-import "./GameBoard.css";
+import "./PGameBoard.css";
 
-function GameBoard({ board, status, setBoard, setStatus }) {
-    // helper functions
+function PGameBoard({ board, status, setBoard, setStatus }) {
     return (
         <div className="chessboard">
             {[...Array(8)].map((_, col) => (
@@ -18,8 +17,10 @@ function GameBoard({ board, status, setBoard, setStatus }) {
                                 key={`${row}${col}`}
                                 className={`square ${isDark ? "dark" : "light"}`}
                             >
-                                { piece !== 'x' && (
-                                    <GamePiece code={piece} turn={status.turn} />
+                                { piece !== 'x' ? (
+                                    <PGamePiece code={piece} turn={status.turn} />
+                                ) : (
+                                    <div className="placeholder">&nbsp;</div>
                                 )}
                             </div>
                         );
@@ -30,4 +31,4 @@ function GameBoard({ board, status, setBoard, setStatus }) {
     );
 }
 
-export default GameBoard;
+export default PGameBoard;

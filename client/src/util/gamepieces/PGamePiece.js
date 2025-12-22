@@ -1,8 +1,8 @@
 import React from "react";
 
-import "./GamePiece.css";
+import "./PGamePiece.css";
 
-function GamePiece({ code, turn }) {
+function PGamePiece({ code, turn }) {
     // helper functions
     const getType = (code) => {
         const pieceMap = {
@@ -28,4 +28,4 @@ function GamePiece({ code, turn }) {
     );
 }
 
-export default GamePiece;
+export default PGamePiece;

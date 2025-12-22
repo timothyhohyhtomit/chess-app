@@ -1,0 +1,21 @@
+.panel {
+    display: inline-flex;
+    flex-direction: row;
+    width: 40%;
+    box-sizing: border-box;
+}
+
+.panel-turn {
+    width: 100%;
+    font-size: 150%;
+    background-color: #808080;
+    padding: 5px;
+}
+
+.panel-turn.white {
+    color: #fff;
+}
+
+.panel-turn.black {
+    color: #000;
+}

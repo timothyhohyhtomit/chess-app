@@ -7,7 +7,10 @@ import './App.css';
 function App() {
     return (
         <div className="App">
-            <GameBoard />
+            <GameBoard
+                board="RNBQKBNRPPPPPPPPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxpppppppprnbqkbnr"
+                state=""
+            />
         </div>
     );
 }

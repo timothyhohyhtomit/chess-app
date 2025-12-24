@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import PGame from "./PGame.js";
 
 function Game() {
     // states
-    const [board, setBoard] = useState("RNBQKBNRPPPPPPPPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxpppppppprnbqkbnr");
+    const [board, setBoard] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     const [status, setStatus] = useState({
         turn: 1,  // 1: white's turn, -1: black's turn
         pieceCount: {
@@ -27,12 +27,32 @@ function Game() {
             row: 7,
             col: 4
         },
-        whiteCanCastle: true,
-        blackCanCastle: true,
+        whiteCanCastleKingside: true,
+        whiteCanCastleQueenside: true,
+        blackCanCastleKingside: true,
+        blackCanCastleQueenside: true,
         isChecked: 0,  // 0: neither in check, 1: white in check, -1: black in check
         isStalemate: false,
-        isCheckmate: false
+        isCheckmate: false,
+        enPassantTarget: -1,
+        halfmove: 0,  // halfmove count since last capture or last pawn advance
+        fullmove: 1  // increments after black's move
     });
+    const [FEN, setFEN] = useState("");
+    // side effects
+    useEffect(() => {
+        // FEN active colour field
+        const activeColour = status.turn === 1 ? "w" : "b";
+        // FEN castling availability field
+        let castlingAvailability = (status.whiteCanCastleKingside ? "K" : "") + (status.whiteCanCastleQueenside ? "Q" : "") + (status.blackCanCastleKingside ? "k" : "") + (status.blackCanCastleQueenside ? "q" : "");
+        if (!castlingAvailability) castlingAvailability = "-";
+        // FEN en passant target square
+        const rank = 8 - Math.trunc(status.enPassantTarget / 8);
+        const file = String.fromCharCode(status.enPassantTarget % 8 + 97);
+        const enPassant = rank + file;
+        const fen = [board, activeColour, castlingAvailability, enPassant, status.halfmove, status.fullmove].join(" ");
+        setFEN(fen);
+    }, [board, status]);
     // functionalities
     const isWhiteInCheck = () => {
         // for every black piece, check if it attacks the white king

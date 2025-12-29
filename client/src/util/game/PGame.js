@@ -5,12 +5,13 @@ import PGamePanel from "../gamepanel/PGamePanel.js";
 
 import "./PGame.css";
 
-function PGame({ board, status, setBoard, setStatus }) {
+function PGame({ board, status, legalMovesMask, setBoard, setStatus }) {
     return (
         <div className="game">
             <PGameBoard
                 board={board}
                 status={status}
+                legalMovesMask={legalMovesMask}
                 setBoard={setBoard}
                 setStatus={setStatus}
             />

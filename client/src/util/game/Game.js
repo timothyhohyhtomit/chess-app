@@ -39,8 +39,22 @@ function Game() {
         fullmove: 1  // increments after black's move
     });
     const [FEN, setFEN] = useState("");
+    // size 64 array, indicating sqaures of legal move upon clicking on a piece
+    const [legalMovesMask] = useState(new Array(64).fill(false));
     // side effects
     useEffect(() => {
+        // FEN board configuration
+        const boardRanks = [];
+        for (let i = 0; i < board.length; i++) {
+            let rank = "";
+            for (let j = 0; j < 8; j++) {
+                if (board[i + j] !== 'x') rank += board[i + j];
+                else {
+                    let empty = 1;
+                    while (j < 8 && board[i + (j++)] === 'x') empty++;
+                }
+            }
+        }
         // FEN active colour field
         const activeColour = status.turn === 1 ? "w" : "b";
         // FEN castling availability field
@@ -296,6 +310,7 @@ function Game() {
         <PGame
             board={board}
             status={status}
+            legalMovesMask={legalMovesMask}
             setBoard={setBoard}
             setStatus={setStatus}
         />

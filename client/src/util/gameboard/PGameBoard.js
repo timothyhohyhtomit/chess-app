@@ -16,7 +16,7 @@ function PGameBoard({ board, status, legalMovesMask, setBoard, setStatus }) {
                     else for (let i = 0; i < parseInt(char, 10); i++) newRank += 'x';
                 }
                 return (
-                    <div key={8 - row} className="row">
+                    <>
                         {[...Array(8)].map((_, col) => {
                             const isDark = (row + col) % 2 === 1;
                             const isLegalMove = legalMovesMask[8 * row + col];
@@ -34,7 +34,7 @@ function PGameBoard({ board, status, legalMovesMask, setBoard, setStatus }) {
                                 </div>
                             );
                         })}
-                    </div>
+                    </>
                 );
         })}
         </div>

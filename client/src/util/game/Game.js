@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { boardToFEN } from "./GameHelper.js";
 
 import PGame from "./PGame.js";
 
 function Game() {
     // states
-    const [board, setBoard] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    const [board, setBoard] = useState("xxxxxxxxxxxxxxxxxxxxkpxpxxKxpxpxxxxxPxPxxxxxxPxPxxxxxxxxxxxxxxxx");
     const [status, setStatus] = useState({
         turn: 1,  // 1: white's turn, -1: black's turn
         pieceCount: {
@@ -44,18 +45,7 @@ function Game() {
     // side effects
     useEffect(() => {
         // FEN board configuration
-        const boardRanks = [];
-        for (let i = 0; i < board.length; i++) {
-            let rank = "";
-            for (let j = 0; j < 8; j++) {
-                if (board[i + j] !== 'x') rank += board[i + j];
-                else {
-                    let empty = 1;
-                    while (j < 8 && board[i + (j++)] === 'x') empty++;
-                    rank += empty;
-                }
-            }
-        }
+        const boardFEN = boardToFEN(board);
         // FEN active colour field
         const activeColour = status.turn === 1 ? "w" : "b";
         // FEN castling availability field
@@ -65,7 +55,7 @@ function Game() {
         const rank = 8 - Math.trunc(status.enPassantTarget / 8);
         const file = String.fromCharCode(status.enPassantTarget % 8 + 97);
         const enPassant = rank + file;
-        const fen = [board, activeColour, castlingAvailability, enPassant, status.halfmove, status.fullmove].join(" ");
+        const fen = [boardFEN, activeColour, castlingAvailability, enPassant, status.halfmove, status.fullmove].join(" ");
         setFEN(fen);
     }, [board, status]);
     // functionalities

@@ -23,7 +23,7 @@ function PGameBoard({ board, status, legalMovesMask, setBoard, setStatus }) {
                             const piece = newRank[col];
                             return (
                                 <div
-                                    key={`${row}${col}`}
+                                    key={`rank${row}file${col}`}
                                     className={`square ${isDark ? "dark" : "light"} ${isLegalMove ? "legal-move" : ""}`}
                                 >
                                     { piece !== 'x' ? (

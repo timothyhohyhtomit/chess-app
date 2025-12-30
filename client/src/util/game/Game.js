@@ -52,6 +52,7 @@ function Game() {
                 else {
                     let empty = 1;
                     while (j < 8 && board[i + (j++)] === 'x') empty++;
+                    rank += empty;
                 }
             }
         }
@@ -305,6 +306,16 @@ function Game() {
             }
         }
         return false;
+    };
+    const computeLegalMoves = (board, status, code, position) => {
+        // compute legal moves according to piece type
+        if (code === 'x') return [];
+        // colour
+        const isWhite = code === code.toUpperCase();
+        // piece type
+        const pieceType = code.toLowerCase();
+        let legalMoves = [];
+        
     };
     return (
         <PGame

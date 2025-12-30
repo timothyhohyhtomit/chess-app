@@ -5,7 +5,7 @@ import PGame from "./PGame.js";
 
 function Game() {
     // states
-    const [board, setBoard] = useState("xxxxxxxxxxxxxxxxxxxxkpxpxxKxpxpxxxxxPxPxxxxxxPxPxxxxxxxxxxxxxxxx");
+    const [board, setBoard] = useState("rnbqkbnrppppppppxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxPPPPPPPPRNBQKBNR");
     const [status, setStatus] = useState({
         turn: 1,  // 1: white's turn, -1: black's turn
         pieceCount: {

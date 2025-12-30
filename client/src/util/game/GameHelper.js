@@ -20,6 +20,20 @@ const boardToFEN = (board) => {
     return boardRanks.join("/");
 };
 
-const FENToBoard = (fen) => {};
+const FENToBoard = (fen) => {
+    const ranks = fen.split("/");
+    if (ranks.length !== 8) return "";
+    let board = "";
+    for (const rank of ranks) {
+        for (const square of rank) {
+            if (isNaN(square)) {
+                board += square;
+            } else {
+                board += 'x'.repeat(parseInt(square));
+            }
+        }
+    }
+    return board;
+};
 
 export { boardToFEN, FENToBoard };

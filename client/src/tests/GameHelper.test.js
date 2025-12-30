@@ -46,8 +46,6 @@ const fenEnd6 = "8/8/5k2/p1p1p2p/Pp1pP2P/1P4P1/2P1K3/8";
 
 describe("GameHelper", () => {
     describe("boardToFEN()", () => {
-        beforeAll(() => {
-        });
         it("initial chess board", () => {
             assert.strictEqual(boardToFEN(boardInit), fenInit);
         });

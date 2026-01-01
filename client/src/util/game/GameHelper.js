@@ -188,7 +188,6 @@ const isBlackInCheck = (board, status) => {
                         const step = j < kingCol ? 1 : -1;
                         let col;
                         for (col = j + step; col !== kingCol; col += step) {
-                            console.log("checking col ", col);
                             if (board[8 * i + col] !== 'x') break;
                         }
                         if (col === kingCol) return true;

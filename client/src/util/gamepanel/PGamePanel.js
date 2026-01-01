@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "./PGamePanel.css";
 
-function PGamePanel({ status, setStatus }) {
+function PGamePanel({ board, setBoard, status, setStatus }) {
+    const [boardInput, setBoardInput] = useState(board);
     // event handlers
     const handleClickChangeTurn = (e) => {
         setStatus(prevStatus => {
@@ -18,6 +19,8 @@ function PGamePanel({ status, setStatus }) {
             {/* FOR TESTING ONLY */}
             <div>TESTING</div>
             <button onClick={handleClickChangeTurn}>Change Turn</button>
+            <input className="panel-board-input" type="text" value={boardInput} onChange={(e) => setBoardInput(e.currentTarget.value)} />
+            <button onClick={(e) => setBoard(boardInput)}>Set</button>
         </div>
     );
 }

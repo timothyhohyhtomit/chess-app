@@ -16,6 +16,8 @@ function PGame({ board, status, legalMovesMask, setBoard, setStatus }) {
                 setStatus={setStatus}
             />
             <PGamePanel
+                board={board}
+                setBoard={setBoard}
                 status={status}
                 setStatus={setStatus}
             />

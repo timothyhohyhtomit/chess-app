@@ -36,6 +36,19 @@ const FENToBoard = (fen) => {
     return board;
 };
 
+const movePiece = (board, fromRow, fromCol, toRow, toCol) => {
+    // verify parameters: if invalid, return original board
+    if (typeof board !== "string" || board.length !== 64 || !Number.isInteger(fromRow) || fromRow < 0 || fromRow >= 8 || !Number.isInteger(fromCol) || fromCol < 0 || fromCol >= 8 || !Number.isInteger(toRow) || toRow < 0 || toRow >= 8 || !Number.isInteger(toCol) || toCol < 0 || toCol >= 8) return board;
+    const fromIndex = 8 * fromRow + fromCol;
+    const toIndex = 8 * toRow + toCol;
+    const piece = board[fromIndex];
+    if (piece === 'x') return board;  // no piece to move
+    let newBoard = board.split("");
+    newBoard[toIndex] = piece;
+    newBoard[fromIndex] = 'x';
+    return newBoard.join("");
+};
+
 const isWhiteInCheck = (board, status) => {
     // for every black piece, check if it attacks the white king
     const kingRow = status.whiteKingPosition.row;
@@ -293,4 +306,292 @@ const isBlackInCheck = (board, status) => {
     return false;
 };
 
-export { boardToFEN, FENToBoard, isWhiteInCheck, isBlackInCheck };
+const computeLegalMoves = (board, status, code, position) => {
+    // compute legal moves according to piece type
+    if (code === 'x') return [];
+    // colour
+    const isWhite = code === code.toUpperCase();
+    // piece type
+    const pieceType = code.toLowerCase();
+    // current piece location
+    const r = position.row;
+    const c = position.col;
+    const legalMoves = [];
+    switch (code) {
+        case 'p': {  // black pawn
+            const pawnFront = board[8 * (r + 1) + c];
+            const pawnFrontLeft = board[8 * (r + 1) + (c + 1)];
+            const pawnFrontRight = board[8 * (r + 1) + (c - 1)];
+            // if nothing blocking, pawn can advance
+            if (pawnFront === 'x') {
+                legalMoves.push({
+                    row: r + 1,
+                    col: c
+                });
+            } else if (pawnFrontLeft !== 'x' && pawnFrontLeft === pawnFrontLeft.toUpperCase()) {  // if front left has white piece, pawn can capture
+                legalMoves.push({
+                    row: r + 1,
+                    col: c + 1
+                });
+            } else if (pawnFrontRight !== 'x' && pawnFrontRight === pawnFrontRight.toUpperCase()) {  // if front right has white piece, pawn can capture
+                legalMoves.push({
+                    row: r + 1,
+                    col: c - 1
+                });
+            } else if (r === 1 && pawnFront === 'x') {  // if at starting position and two squares ahead is free, pawn can advance two squares
+                const pawnFront2 = board[8 * (r + 2) + c];
+                if (pawnFront2 === 'x') {
+                    legalMoves.push({
+                        row: r + 2,
+                        col: c
+                    });
+                }
+            }
+            break;
+        }
+        case 'P': {  // white pawn
+            const pawnFront = board[8 * (r - 1) + c];
+            const pawnFrontLeft = board[8 * (r - 1) + (c + 1)];
+            const pawnFrontRight = board[8 * (r - 1) + (c - 1)];
+            // if nothing blocking, pawn can advance
+            if (pawnFront === 'x') {
+                legalMoves.push({
+                    row: r - 1,
+                    col: c
+                });
+            } else if (pawnFrontLeft !== 'x' && pawnFrontLeft === pawnFrontLeft.toUpperCase()) {  // if front left has white piece, pawn can capture
+                legalMoves.push({
+                    row: r - 1,
+                    col: c + 1
+                });
+            } else if (pawnFrontRight !== 'x' && pawnFrontRight === pawnFrontRight.toUpperCase()) {  // if front right has white piece, pawn can capture
+                legalMoves.push({
+                    row: r - 1,
+                    col: c - 1
+                });
+            } else if (r === 6 && pawnFront === 'x') {  // if at starting position and two squares ahead is free, pawn can advance two squares
+                const pawnFront2 = board[8 * (r - 2) + c];
+                if (pawnFront2 === 'x') {
+                    legalMoves.push({
+                        row: r - 2,
+                        col: c
+                    });
+                }
+            }
+            break;
+        }
+        case 'r': {
+            // northbound moves
+            for (let row = r - 1; row >= 0; row--) {
+                const square = board[8 * row + c];
+                const isSquareWhite = square === square.toUpperCase();
+                if (square === 'x') {  // empty square
+                    legalMoves.push({
+                        row: row,
+                        col: c
+                    });
+                } else {  // occupied square
+                    if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                        legalMoves.push({
+                            row: row,
+                            col: c
+                        });
+                    }
+                    break;
+                }
+            }
+            // southbound moves
+            for (let row = r + 1; row < 8; row++) {
+                const square = board[8 * row + c];
+                const isSquareWhite = square === square.toUpperCase();
+                if (square === 'x') {  // empty square
+                    legalMoves.push({
+                        row: row,
+                        col: c
+                    });
+                } else {  // occupied square
+                    if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                        legalMoves.push({
+                            row: row,
+                            col: c
+                        });
+                    }
+                    break;
+                }
+            }
+            // eastbound moves
+            for (let col = c + 1; col < 8; col++) {
+                const square = board[8 * r + col];
+                const isSquareWhite = square === square.toUpperCase();
+                if (square === 'x') {  // empty square
+                    legalMoves.push({
+                        row: r,
+                        col: col
+                    });
+                } else {  // occupied square
+                    if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                        legalMoves.push({
+                            row: r,
+                            col: col
+                        });
+                    }
+                    break;
+                }
+            }
+            // westbound moves
+            for (let col = c - 1; col >= 0; col--) {
+                const square = board[8 * r + col];
+                const isSquareWhite = square === square.toUpperCase();
+                if (square === 'x') {  // empty square
+                    legalMoves.push({
+                        row: r,
+                        col: col
+                    });
+                } else {  // occupied square
+                    if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                        legalMoves.push({
+                            row: r,
+                            col: col
+                        });
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case 'n': {
+            // knight moves
+            const knightMoves = [
+                [i + 2, j + 1],
+                [i + 2, j - 1],
+                [i - 2, j + 1],
+                [i - 2, j - 1],
+                [i + 1, j + 2],
+                [i + 1, j - 2],
+                [i - 1, j + 2],
+                [i - 1, j - 2]
+            ];
+            for (const [row, col] of knightMoves) {
+                if (row < 0 || row >= 8 || col < 0 || col >= 8) continue;
+                const square = board[8 * row + col];
+                const isSquareWhite = square === square.toUpperCase();
+                // can move to empty square or capture opposite colour piece
+                if (square === 'x' || isWhite !== isSquareWhite) {
+                    legalMoves.push({
+                        row: row,
+                        col: col
+                    });
+                }
+            }
+            break;
+        }
+        case 'b': {
+            // bishop moves
+            const directions = [
+                [1, 1],
+                [1, -1],
+                [-1, 1],
+                [-1, -1]
+            ];
+            for (const [dRow, dCol] of directions) {
+                let row = r + dRow;
+                let col = c + dCol;
+                while (row >= 0 && row < 8 && col >= 0 && col < 8) {
+                    const square = board[8 * row + col];
+                    const isSquareWhite = square === square.toUpperCase();
+                    if (square === 'x') {  // empty square
+                        legalMoves.push({
+                            row: row,
+                            col: col
+                        });
+                    } else {  // occupied square
+                        if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                            legalMoves.push({
+                                row: row,
+                                col: col
+                            });
+                        }
+                        break;
+                    }
+                    row += dRow;
+                    col += dCol;
+                }
+            }
+            break;
+        }
+        case 'q': {
+            // queen moves
+            const directions = [
+                [-1, -1],
+                [-1, 0],
+                [-1, 1],
+                [0, -1],
+                [0, 1],
+                [1, -1],
+                [1, 0],
+                [1, 1]
+            ];
+            for (const [dRow, dCol] of directions) {
+                let row = r + dRow;
+                let col = c + dCol;
+                while (row >= 0 && row < 8 && col >= 0 && col < 8) {
+                    const square = board[8 * row + col];
+                    const isSquareWhite = square === square.toUpperCase();
+                    if (square === 'x') {  // empty square
+                        legalMoves.push({
+                            row: row,
+                            col: col
+                        });
+                    } else {  // occupied square
+                        if (isWhite !== isSquareWhite) {  // piece is opposite colour, can capture
+                            legalMoves.push({
+                                row: row,
+                                col: col
+                            });
+                        }
+                        break;
+                    }
+                    row += dRow;
+                    col += dCol;
+                }
+            }
+            break;
+        }
+        case 'k': {
+            // king can move one square in any direction if it's unoccupied
+            const directions = [
+                [-1, -1],
+                [-1, 0],
+                [-1, 1],
+                [0, -1],
+                [0, 1],
+                [1, -1],
+                [1, 0],
+                [1, 1]
+            ];
+            for (const [dRow, dCol] of directions) {
+                const row = r + dRow;
+                const col = c + dCol;
+                if (row < 0 || row >= 8 || col < 0 || col >= 8) continue;
+                const square = board[8 * row + col];
+                const isSquareWhite = square === square.toUpperCase();
+                // can move to empty square or capture opposite colour piece
+                if (square === 'x' || isWhite !== isSquareWhite) {
+                    legalMoves.push({
+                        row: row,
+                        col: col
+                    });
+                }
+            }
+            // or king can castle if (1) it has not lost his castling ability, (2) not in check, (3) no pieces are blocking his castling path
+            if (status.isChecked === -1) break;  // cannot castle when black in check
+            if (status.blackCanCastleKingside) {}
+            else if (status.blackCanCastleQueenside) {}
+            break;
+        }
+        default: break;
+    }
+    
+};
+
+export { boardToFEN, FENToBoard, isWhiteInCheck, isBlackInCheck, computeLegalMoves };

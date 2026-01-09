@@ -461,14 +461,14 @@ const computeLegalMoves = (board, status, code, position) => {
         case 'n': {
             // knight moves
             const knightMoves = [
-                [i + 2, j + 1],
-                [i + 2, j - 1],
-                [i - 2, j + 1],
-                [i - 2, j - 1],
-                [i + 1, j + 2],
-                [i + 1, j - 2],
-                [i - 1, j + 2],
-                [i - 1, j - 2]
+                [r + 2, c + 1],
+                [r + 2, c - 1],
+                [r - 2, c + 1],
+                [r - 2, c - 1],
+                [r + 1, c + 2],
+                [r + 1, c - 2],
+                [r - 1, c + 2],
+                [r - 1, c - 2]
             ];
             for (const [row, col] of knightMoves) {
                 if (row < 0 || row >= 8 || col < 0 || col >= 8) continue;

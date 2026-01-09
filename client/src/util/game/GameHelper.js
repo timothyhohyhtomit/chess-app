@@ -593,4 +593,4 @@ const computeLegalMoves = (board, status, code, position) => {
     
 };
 
-export { boardToFEN, FENToBoard, isWhiteInCheck, isBlackInCheck, computeLegalMoves };
+export { boardToFEN, FENToBoard, movePiece, isWhiteInCheck, isBlackInCheck, computeLegalMoves };
